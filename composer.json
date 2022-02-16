@@ -1,0 +1,21 @@
+{
+    "name": "aftership/magento2-extension",
+    "description": "AfterShip extension for Magento 2. Allows connect with AfterShip and more.",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "AfterShip\\Tracking\\": ""
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "require": {
+        "php": ">=7.1.0",
+        "magento/module-quote": ">=101.1.3"
+    }
+}
