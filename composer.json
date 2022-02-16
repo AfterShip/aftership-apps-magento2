@@ -1,5 +1,5 @@
 {
-    "name": "aftership/magento2-extension",
+    "name": "aftership/aftership-apps-magento2",
     "description": "AfterShip extension for Magento 2. Allows connect with AfterShip and more.",
     "type": "magento2-module",
     "version": "1.0.0",
