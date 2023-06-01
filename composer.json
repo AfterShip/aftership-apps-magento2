@@ -3,7 +3,7 @@
     "description": "AfterShip extension for Magento 2. Allows connect with AfterShip and more.",
     "type": "magento2-module",
     "version": "1.0.1",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "license": "MIT",
     "keywords": ["aftership", "magento", "magento2", "magento-2", "tracking", "shipping"],
     "authors": [
