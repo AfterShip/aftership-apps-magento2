@@ -2,14 +2,14 @@
 
 namespace AfterShip\Tracking\Setup;
 
-use Magento\Framework\Setup\UpgradeDataInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Store\Api\StoreRepositoryInterface;
-use Magento\Integration\Api\AuthorizationServiceInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Integration\Api\IntegrationServiceInterface;
+use Magento\Integration\Api\AuthorizationServiceInterface;
+use Magento\Framework\Setup\InstallDataInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 
-class UpgradeData implements UpgradeDataInterface
+class RecurringData implements InstallDataInterface
 {
     use IntegrationTrait;
 
@@ -41,7 +41,11 @@ class UpgradeData implements UpgradeDataInterface
         $this->authorizationService = $authorizationService;
     }
 
-    public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
+    /**
+     * {@inheritdoc}
+     */
+
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $this->run($setup, $context);
     }
