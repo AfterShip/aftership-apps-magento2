@@ -30,6 +30,8 @@ class RecurringData implements InstallDataInterface
      */
     protected $authorizationService;
 
+    private $apps = ['tracking', 'returns'];
+
     public function __construct(
         StoreRepositoryInterface      $storeRepository,
         IntegrationServiceInterface   $integrationService,
@@ -48,7 +50,6 @@ class RecurringData implements InstallDataInterface
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
 		$storeList = $this->storeRepository->getList();
-		$integrationNames = [];
 		foreach ($storeList as $index => $item) {
 			$storeId = $item->getId();
 			if ($storeId == 0) continue;
