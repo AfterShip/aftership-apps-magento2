@@ -10,14 +10,14 @@ use Magento\Checkout\Model\Cart;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Store\Model\StoreManagerInterface;
 use AfterShip\Tracking\Constants;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
-use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
+use Exception;
+use Throwable;
 
 class Adjust extends Action
 {
@@ -72,7 +72,7 @@ class Adjust extends Action
     {
         try {
             $product = $this->getProtectionProduct();
-            $newPrice = $this->getRequest()->getParam('price');
+            $newPrice = abs($this->getRequest()->getParam('price'));
             $quote = $this->cart->getQuote();
             $quoteItem = $this->getQuoteItem($product);
             $quoteItem
@@ -83,7 +83,14 @@ class Adjust extends Action
                 ->save();
             $quote->collectTotals()->save();
             $result = ['success' => true];
-        } catch (LocalizedException $e) {
+        }catch (Throwable $t) {
+            $result = [
+                'success' => false,
+                'detail' => 'failed to create protection product',
+                'error_message' => $t->getMessage(),
+                'error_trace' => $t->getTraceAsString(),
+            ];
+        } catch (Exception $e) {
             $result = [
                 'success' => false,
                 'detail' => 'failed to create protection product',
@@ -99,7 +106,6 @@ class Adjust extends Action
      *
      * @param ProductInterface $product
      * @return bool|\Magento\Quote\Model\Quote\Item
-     * @throws LocalizedException
      */
     protected function getQuoteItem(ProductInterface $product)
     {
@@ -120,7 +126,6 @@ class Adjust extends Action
      * Get full path for protection image on plugin folder
      *
      * @return bool|string|null
-     * @throws LocalizedException
      */
     public function getProtectionImageFullPath()
     {
@@ -141,7 +146,7 @@ class Adjust extends Action
     {
         try {
             return $this->productRepository->get(Constants::AFTERSHIP_PROTECTION_SKU);
-        } catch (LocalizedException $e) {
+        } catch (Exception $e) {
             return $this->createProtectionProduct();
         }
     }
@@ -152,7 +157,6 @@ class Adjust extends Action
      * @param $sourcePath
      * @param $fileName
      * @return string
-     * @throws FileSystemException
      */
     protected function copyImageToMediaDirectory($sourcePath, $fileName)
     {
