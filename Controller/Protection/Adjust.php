@@ -72,7 +72,7 @@ class Adjust extends Action
     {
         try {
             $product = $this->getProtectionProduct();
-            $newPrice = $this->getRequest()->getParam('price');
+            $newPrice = abs($this->getRequest()->getParam('price'));
             $quote = $this->cart->getQuote();
             $quoteItem = $this->getQuoteItem($product);
             $quoteItem
