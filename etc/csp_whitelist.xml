@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp/etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="googleAjax" type="host">ajax.googleapis.com</value>
+                <value id="googleFonts" type="host">fonts.googleapis.com</value>
+                <value id="automizelyScriptCom" type="host">widgets.automizely.com</value>
+                <value id="automizelyScriptIo" type="host">widgets.automizely.io</value>
+            </values>
+        </policy>
+
+        <policy id="style-src">
+            <values>
+                <value id="googleFontsStype" type="host">fonts.googleapis.com</value>
+                <value id="automizelyStypeCom" type="host">widgets.automizely.com</value>
+                <value id="automizelyStyleIo" type="host">widgets.automizely.io</value>
+            </values>
+        </policy>
+
+        <policy id="img-src">
+            <values>
+                <value id="automizelyImgCom" type="host">widgets.automizely.com</value>
+                <value id="automizelyImgIo" type="host">widgets.automizely.io</value>
+            </values>
+        </policy>
+
+        <policy id="connect-src">
+            <values>
+                <value id="automizelyAPICom" type="host">api.automizely.com</value>
+                <value id="automizelyAPIIo" type="host">api.automizely.io</value>
+            </values>
+        </policy>
+
+    </policies>
+</csp_whitelist>
