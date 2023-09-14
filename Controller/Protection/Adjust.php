@@ -71,19 +71,33 @@ class Adjust extends Action
     public function execute()
     {
         try {
-            $product = $this->getProtectionProduct();
             $newPrice = abs($this->getRequest()->getParam('price'));
+            $product = $this->getProtectionProduct();
+            $this->cart->addProduct($product, [
+                'product' => $product->getId(),
+                'qty' => 1
+            ]);
             $quote = $this->cart->getQuote();
-            $quoteItem = $this->getQuoteItem($product);
-            $quoteItem
+            $quote->getItemByProduct($product)
+                ->setQty(1)
+                ->setPrice($newPrice)
+                ->setBasePrice($newPrice)
                 ->setCustomPrice($newPrice)
                 ->setOriginalCustomPrice($newPrice)
+                ->setBaseRowTotal($newPrice)
+                ->setRowTotal($newPrice)
                 ->getProduct()
                 ->setIsSuperMode(true)
                 ->save();
-            $quote->collectTotals()->save();
-            $result = ['success' => true];
-        }catch (Throwable $t) {
+            $quote
+                ->setTotalsCollectedFlag(false)
+                ->collectTotals()
+                ->save();;
+            $result = [
+                'price' => $newPrice,
+                'success' => true
+            ];
+        } catch (Throwable $t) {
             $this->getResponse()->setHttpResponseCode(400);
             $result = [
                 'success' => false,
@@ -101,27 +115,6 @@ class Adjust extends Action
             ];
         }
         return $this->getResponse()->representJson(json_encode($result));
-    }
-
-    /**
-     * Get quote item
-     *
-     * @param ProductInterface $product
-     * @return bool|\Magento\Quote\Model\Quote\Item
-     */
-    protected function getQuoteItem(ProductInterface $product)
-    {
-        $quoteItem = $this->cart->getQuote()->getItemByProduct($product);
-        if (!$quoteItem) {
-            $params = [
-                'product' => $product->getId(),
-                'qty' => 1
-            ];
-            $this->cart->addProduct($product, $params);
-            $this->cart->save();
-            $quoteItem = $this->cart->getQuote()->getItemByProduct($product);
-        }
-        return $quoteItem;
     }
 
     /**
@@ -184,6 +177,7 @@ class Adjust extends Action
             'visibility' => Visibility::VISIBILITY_NOT_VISIBLE,
             'type_id' => Type::TYPE_VIRTUAL,
             'attribute_set_id' => 4,
+            'tax_class_id' => 0,
             'website_ids' => $this->getAllSiteIds(),
         ];
         $product = $this->productInterfaceFactory->create();
