@@ -84,6 +84,7 @@ class Adjust extends Action
             $quote->collectTotals()->save();
             $result = ['success' => true];
         }catch (Throwable $t) {
+            $this->getResponse()->setHttpResponseCode(400);
             $result = [
                 'success' => false,
                 'detail' => 'failed to create protection product',
@@ -91,6 +92,7 @@ class Adjust extends Action
                 'error_trace' => $t->getTraceAsString(),
             ];
         } catch (Exception $e) {
+            $this->getResponse()->setHttpResponseCode(400);
             $result = [
                 'success' => false,
                 'detail' => 'failed to create protection product',
