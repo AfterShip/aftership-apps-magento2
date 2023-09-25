@@ -102,7 +102,7 @@ class Adjust extends Action
             $quote
                 ->setTotalsCollectedFlag(false)
                 ->collectTotals()
-                ->save();;
+                ->save();
             $result = [
                 'price' => $newPrice,
                 'success' => true
