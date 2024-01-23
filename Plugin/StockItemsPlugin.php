@@ -69,7 +69,7 @@ class StockItemsPlugin
         if (empty($productIds)) {
             return $proceed($scopeId, $qty, $currentPage, $pageSize);
         }
-        if (is_array($productIds) && count($productIds) > 0) {
+        if (is_array($productIds)) {
             $productIds = array_map('intval', $productIds);
         } else {
             $productIds = array_map('intval', explode(',', $productIds));
