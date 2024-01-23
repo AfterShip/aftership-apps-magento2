@@ -2,6 +2,7 @@
 
 namespace AfterShip\Tracking\Plugin;
 
+use AfterShip\Tracking\Constants;
 use Magento\Integration\Api\IntegrationServiceInterface;
 use Magento\Authorization\Model\UserContextInterface;
 use Magento\Store\Api\Data\StoreConfigInterface;
@@ -37,6 +38,16 @@ class StoreConfigExtensionAttributes
         return $apiScopes;
     }
 
+    /**
+     * GetVersion
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return Constants::AFTERSHIP_TRACKING_VERSION;
+    }
+
     public function afterGetStoreConfigs(StoreConfigManagerInterface $subject, $result)
     {
         /** @var StoreConfigInterface $store */
@@ -49,9 +60,13 @@ class StoreConfigExtensionAttributes
             if (method_exists($extensionAttributes, 'setPermissions')) {
                 call_user_func_array(array($extensionAttributes, 'setPermissions'), array($this->getApiScopes()));
             }
+            if (method_exists($extensionAttributes, 'setAftershipTracking')) {
+                call_user_func_array([$extensionAttributes, 'setAftershipTracking'], [$this->getVersion()]);
+            }
             // Pass Upgrade compatibility tool check.
             if (method_exists($extensionAttributes, 'setData')) {
                 call_user_func_array(array($extensionAttributes, 'setData'), array('permissions', $this->getApiScopes()));
+                call_user_func_array(array($extensionAttributes, 'setData'), array('aftership_tracking', $this->getVersion()));
             }
             $store->setExtensionAttributes($extensionAttributes);
         }
