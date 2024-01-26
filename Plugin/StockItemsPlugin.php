@@ -2,7 +2,6 @@
 
 namespace AfterShip\Tracking\Plugin;
 
-use _PHPStan_582a9cb8b\Nette\Neon\Exception;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
