@@ -2,6 +2,7 @@
 
 namespace AfterShip\Tracking\Plugin;
 
+use _PHPStan_582a9cb8b\Nette\Neon\Exception;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
@@ -9,6 +10,7 @@ use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\App\RequestInterface;
+use Psr\Log\LoggerInterface;
 
 class StockItemsPlugin
 {
@@ -38,6 +40,12 @@ class StockItemsPlugin
      * @var CollectionFactory $productCollectionFactory
      */
     protected $productCollectionFactory;
+    /**
+     * Logger Instance.
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
 
 
     /**
@@ -47,18 +55,21 @@ class StockItemsPlugin
      * @param StockItemRepositoryInterface $stockItemRepository
      * @param StockItemCriteriaInterfaceFactory $criteriaFactory
      * @param CollectionFactory $productCollectionFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         RequestInterface                  $request,
         StockItemRepositoryInterface      $stockItemRepository,
         StockItemCriteriaInterfaceFactory $criteriaFactory,
-        CollectionFactory                 $productCollectionFactory
+        CollectionFactory                 $productCollectionFactory,
+        LoggerInterface                   $logger,
     )
     {
         $this->request = $request;
         $this->stockItemRepository = $stockItemRepository;
         $this->criteriaFactory = $criteriaFactory;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -79,13 +90,22 @@ class StockItemsPlugin
                                $pageSize = 0
     )
     {
-        $productIds = $this->request->getParam('productIds');
-        if (!empty($productIds)) {
-            return $this->getStockItemsByProductIds($productIds, $currentPage, $pageSize);
-        }
-        $skus = $this->request->getParam('skus');
-        if (!empty($skus)) {
-            return $this->getStockItemsBySkus($skus, $currentPage, $pageSize);
+        try {
+            $productIds = $this->request->getParam('productIds');
+            if (!empty($productIds)) {
+                return $this->getStockItemsByProductIds($productIds, $currentPage, $pageSize);
+            }
+            $skus = $this->request->getParam('skus');
+            if (!empty($skus)) {
+                return $this->getStockItemsBySkus($skus, $currentPage, $pageSize);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(
+                sprintf(
+                    '[AfterShip Tracking] Failed to get stockItems by products, %s',
+                    $e->getMessage()
+                )
+            );
         }
         return $proceed($scopeId, $qty, $currentPage, $pageSize);
     }
