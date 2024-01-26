@@ -62,7 +62,7 @@ class StockItemsPlugin
         StockItemRepositoryInterface      $stockItemRepository,
         StockItemCriteriaInterfaceFactory $criteriaFactory,
         CollectionFactory                 $productCollectionFactory,
-        LoggerInterface                   $logger,
+        LoggerInterface                   $logger
     )
     {
         $this->request = $request;
