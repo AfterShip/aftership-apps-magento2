@@ -21,4 +21,5 @@ namespace AfterShip\Tracking;
 class Constants
 {
     public const AFTERSHIP_PROTECTION_SKU = 'aftership-protection';
+    public const AFTERSHIP_TRACKING_VERSION = '1.0.3';
 }
