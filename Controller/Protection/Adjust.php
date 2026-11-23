@@ -145,7 +145,7 @@ class Adjust extends Action
     /**
      * Get protection product
      *
-     * @return ProductInterface|void
+     * @return ProductInterface
      */
     protected function getProtectionProduct()
     {
@@ -174,7 +174,7 @@ class Adjust extends Action
     /**
      * Create protection product
      *
-     * @return void
+     * @return ProductInterface
      */
     protected function createProtectionProduct()
     {
